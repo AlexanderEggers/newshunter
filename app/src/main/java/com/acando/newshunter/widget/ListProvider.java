@@ -46,23 +46,23 @@ public final class ListProvider implements RemoteViewsFactory {
     public RemoteViews getViewAt(int position) {
         RemoteViews remoteView = new RemoteViews(context.getPackageName(), R.layout.widget_list_item);
 
-        Article listItem = listItemList.get(position);
-        remoteView.setTextViewText(R.id.title, listItem.title);
-        remoteView.setTextViewText(R.id.desc, listItem.desc);
+        Article article = listItemList.get(position);
+        remoteView.setTextViewText(R.id.title, article.title);
+        remoteView.setTextViewText(R.id.desc, article.desc);
 
         Calendar cal = new GregorianCalendar();
         SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.YYYY HH:mm");
-        cal.setTimeInMillis(listItem.date);
+        cal.setTimeInMillis(article.date);
         remoteView.setTextViewText(R.id.date, sdf.format(cal.getTime()));
 
-        Source source = SourceTable.get(context, listItem.source);
+        Source source = SourceTable.get(context, article.source);
         remoteView.setTextViewText(R.id.source, source.name);
 
         //ListView click event part 2
         Intent fillInIntent = new Intent();
         fillInIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
-        fillInIntent.putExtra("source_internal_name", listItem.source);
-        fillInIntent.putExtra(WidgetProvider.EXTRA_LIST_VIEW_ITEM_URL, listItem.link);
+        fillInIntent.putExtra("source_internal_name", article.source);
+        fillInIntent.putExtra(WidgetProvider.EXTRA_LIST_VIEW_ITEM_URL, article.link);
         remoteView.setOnClickFillInIntent(R.id.widget_item_layout, fillInIntent);
 
         return remoteView;

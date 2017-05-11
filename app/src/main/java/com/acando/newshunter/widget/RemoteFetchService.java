@@ -37,7 +37,7 @@ public class RemoteFetchService extends Service {
             @Override
             protected Void doInBackground(Void... params) {
                 try {
-                    ArrayList<Article> temp = ArticleRetriever.retrieveArticles(getApplicationContext(), "top");
+                    ArrayList<Article> temp = ArticleRetriever.retrieveArticles(getApplicationContext());
 
                     for(int i = 0; i <= 10 && i < temp.size(); i++) {
                         listItemList.add(temp.get(i));

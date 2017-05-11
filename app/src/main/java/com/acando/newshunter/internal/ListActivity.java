@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -20,6 +22,7 @@ import java.util.ArrayList;
 public class ListActivity extends Activity {
 
     public ViewImageTask mImageTask;
+    private ListAdapter adapter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -33,22 +36,19 @@ public class ListActivity extends Activity {
 
         LoadArticlesTask task = new LoadArticlesTask(this);
         task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, "https://www.theguardian.com/world/rss");
+
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.list);
+        recyclerView.setHasFixedSize(true);
+
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        recyclerView.setLayoutManager(layoutManager);
+
+        adapter = new ListAdapter(this, new ArrayList<Article>());
+        recyclerView.setAdapter(adapter);
     }
 
     public void loadList(ArrayList<Article> items) {
-        ListView listView = (ListView) findViewById(R.id.list);
-        final ListAdapter adapter = new ListAdapter(this, items);
-        listView.setAdapter(adapter);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Article entry = adapter.getItem(position);
-                if(entry != null) {
-                    Intent intent = new Intent(ListActivity.this, DetailActivity.class);
-                    intent.putExtra("url", entry.link);
-                    startActivity(intent);
-                }
-            }
-        });
+        adapter.insertItems(items);
     }
 }

@@ -44,7 +44,7 @@ public class UtilDatabase {
 
     private static void initDatabase(Context context) {
         TableIDsTable.insertTableID(context, Util.FEED_TABLE);
-        SourceTable.insert(context, new Source("spiegel-online", "Spiegel Online", "http://www.spiegel.de"));
-        SourceTable.insert(context, new Source("the-guardian-uk", "The Guardian (UK)", "https://www.theguardian.com/uk"));
+        SourceTable.insert(context, new Source("spiegel-online", "Spiegel Online", "http://www.spiegel.de", false));
+        SourceTable.insert(context, new Source("the-guardian-uk", "The Guardian (UK)", "https://www.theguardian.com/uk", true));
     }
 }

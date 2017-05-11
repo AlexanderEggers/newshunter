@@ -6,6 +6,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.widget.AbsListView;
 import android.widget.ArrayAdapter;
@@ -16,6 +17,7 @@ import com.acando.newshunter.Global;
 import com.acando.newshunter.R;
 import com.acando.newshunter.UtilNetwork;
 import com.acando.newshunter.internal.ListActivity;
+import com.acando.newshunter.internal.ListAdapter;
 
 import java.io.IOException;
 import java.util.concurrent.ConcurrentHashMap;
@@ -100,8 +102,8 @@ public class ViewImageTask extends AsyncTask<Void, Void, Void> {
                     mItemView.remove(key);
                     mItems.remove(key);
 
-                    AbsListView list = (ListView) activity.findViewById(R.id.list);
-                    ((ArrayAdapter) list.getAdapter()).notifyDataSetChanged();
+                    RecyclerView list = (RecyclerView) activity.findViewById(R.id.list);
+                    list.getAdapter().notifyDataSetChanged();
                 }
             });
         }

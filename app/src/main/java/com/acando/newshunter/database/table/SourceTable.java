@@ -15,10 +15,12 @@ public class SourceTable {
     public static void insert(Context context, Source source) {
         synchronized (UtilDatabase.LOCK) {
             SQLiteDatabase db = UtilDatabase.openWritableDatabase(context);
+            int latestValue = source.supportsLatest ? 1 : 0;
 
-            String sql = "INSERT INTO source (internal_name, name, url) VALUES ('"
+            String sql = "INSERT INTO source (internal_name, name, latest, url) VALUES ('"
                     + source.internalName.replace("'", Util.DB_APOSTROPHE_FIX) + "', '"
-                    + source.name.replace("'", Util.DB_APOSTROPHE_FIX) + "', '"
+                    + source.name.replace("'", Util.DB_APOSTROPHE_FIX) + "', "
+                    +  + latestValue + ", '"
                     + source.url.replace("'", Util.DB_APOSTROPHE_FIX) + "');";
             db.execSQL(sql);
             db.close();
@@ -37,6 +39,7 @@ public class SourceTable {
                 Source source = new Source();
                 source.internalName = c.getString(0);
                 source.name = c.getString(1);
+                source.supportsLatest = c.getInt(2) == 1;
                 source.url = c.getString(2);
                 sources.add(source);
                 c.moveToNext();
@@ -59,7 +62,8 @@ public class SourceTable {
             source = new Source();
             source.internalName = c.getString(0);
             source.name = c.getString(1);
-            source.url = c.getString(2);
+            source.supportsLatest = c.getInt(2) == 1;
+            source.url = c.getString(3);
         }
 
         c.close();

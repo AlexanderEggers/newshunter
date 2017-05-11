@@ -28,6 +28,7 @@ public class DatabaseCreator {
         sql = "CREATE TABLE source "
                 + "(internal_name           TEXT       PRIMARY KEY   NOT NULL,"
                 + " name                    TEXT                     NOT NULL,"
+                + " latest                  INT                      NOT NULL,"
                 + " url                     TEXT                     NOT NULL)";
         db.execSQL(sql);
 

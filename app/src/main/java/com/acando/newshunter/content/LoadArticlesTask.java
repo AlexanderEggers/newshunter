@@ -21,7 +21,7 @@ public class LoadArticlesTask extends AsyncTask<String, Void, ArrayList<Article>
         ArrayList<Article> items = new ArrayList<>();
 
         try {
-            items = ArticleRetriever.retrieveArticles(mContext, "top");
+            items = ArticleRetriever.retrieveArticles(mContext);
         } catch (Exception e) {
             Log.e(LoadArticlesTask.class.getName(), e.getMessage());
         }

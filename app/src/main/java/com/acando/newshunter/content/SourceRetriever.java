@@ -35,6 +35,15 @@ public class SourceRetriever {
             source.internalName = UtilRetriever.getJSONStringValue(sourceJSON, "id");
             source.name = UtilRetriever.getJSONStringValue(sourceJSON, "name");
             source.url = UtilRetriever.getJSONStringValue(sourceJSON, "url");
+
+            JSONArray filters = sourceJSON.getJSONArray("sortBysAvailable");
+            for (int j = 0; j < filters.length(); j++) {
+                String filter = filters.getString(j);
+                if("latest".equals(filter)) {
+                    source.supportsLatest = true;
+                    break;
+                }
+            }
             sources.add(source);
         }
 

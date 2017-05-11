@@ -19,11 +19,13 @@ import java.util.GregorianCalendar;
 
 public class ArticleRetriever {
 
-    public static ArrayList<Article> retrieveArticles(Context context, String sort) throws Exception {
+    public static ArrayList<Article> retrieveArticles(Context context) throws Exception {
         ArrayList<Article> articles = new ArrayList<>();
         ArrayList<Source> sources = SourceTable.getAll(context);
+        String sort;
 
         for (Source sourceItem : sources) {
+            sort = sourceItem.supportsLatest ? "latest" : "top";
             articles.addAll(getArticlesBySource(context, sourceItem.internalName, sort, 5));
         }
 
@@ -74,10 +76,15 @@ public class ArticleRetriever {
             if(!data.equals("")) {
                 String dateTimeSplit[] = date.split("T");
                 String dateSplit[] = dateTimeSplit[0].split("-");
-                String timeSplit[] = dateTimeSplit[1].replace("Z", "").split(":");
 
-                System.out.println(Arrays.asList(dateSplit));
-                System.out.println(Arrays.asList(timeSplit));
+                String timeSplit[];
+                String timeSplitFormat[] = dateTimeSplit[1].split(".");
+                if(timeSplitFormat.length == 0) {
+                    timeSplit = dateTimeSplit[1].replace("Z", "").split(":");
+                } else {
+                    timeSplit = timeSplitFormat[0].replace("Z", "").split(":");
+                }
+
 
                 Calendar cal = new GregorianCalendar();
                 cal.set(
