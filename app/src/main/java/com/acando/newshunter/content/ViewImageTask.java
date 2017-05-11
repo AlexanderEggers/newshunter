@@ -117,7 +117,7 @@ public class ViewImageTask extends AsyncTask<Void, Void, Void> {
      * @param item InfoItem which should be used for the teaserURL
      * @param view ImageView which should be used to display the new image
      */
-    public synchronized void addItem(NewsEntry item, ImageView view) {
+    public synchronized void addItem(Article item, ImageView view) {
         if (item != null && item.imageURL != null && !item.imageURL.trim().equals("")) {
             long key = System.currentTimeMillis();
             mItemView.put(key, view);

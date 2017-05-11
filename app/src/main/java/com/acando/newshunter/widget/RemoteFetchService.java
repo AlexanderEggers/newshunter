@@ -7,20 +7,16 @@ import android.os.AsyncTask;
 import android.os.IBinder;
 import android.util.Log;
 
-import com.acando.newshunter.content.GuardianXMLParser;
-import com.acando.newshunter.content.NewsEntry;
-import com.acando.newshunter.UtilNetwork;
+import com.acando.newshunter.content.ArticleRetriever;
+import com.acando.newshunter.content.Article;
 import com.acando.newshunter.database.table.FeedTable;
 
-import org.xmlpull.v1.XmlPullParserException;
-
-import java.io.IOException;
 import java.util.ArrayList;
 
 public class RemoteFetchService extends Service {
 
     private int appWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID;
-    private ArrayList<NewsEntry> listItemList;
+    private ArrayList<Article> listItemList;
 
     @Override
     public IBinder onBind(Intent arg0) {
@@ -41,13 +37,12 @@ public class RemoteFetchService extends Service {
             @Override
             protected Void doInBackground(Void... params) {
                 try {
-                    GuardianXMLParser xmlParser = new GuardianXMLParser();
-                    ArrayList<NewsEntry> temp = xmlParser.parse(UtilNetwork.downloadUrl("https://www.theguardian.com/world/rss"));
+                    ArrayList<Article> temp = ArticleRetriever.retrieveArticles(getApplicationContext(), "top");
 
-                    for(int i = 0; i <= 10; i++) {
+                    for(int i = 0; i <= 10 && i < temp.size(); i++) {
                         listItemList.add(temp.get(i));
                     }
-                } catch (IOException|XmlPullParserException e) {
+                } catch (Exception e) {
                     Log.e(RemoteFetchService.class.getName(), "" + e.getMessage());
                 }
 

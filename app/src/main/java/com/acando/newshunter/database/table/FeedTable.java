@@ -5,25 +5,26 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.acando.newshunter.Util;
-import com.acando.newshunter.content.NewsEntry;
+import com.acando.newshunter.content.Article;
 import com.acando.newshunter.database.UtilDatabase;
 
 import java.util.ArrayList;
 
 public class FeedTable {
 
-    public static void insertAll(Context context, ArrayList<NewsEntry> entries) {
+    public static void insertAll(Context context, ArrayList<Article> entries) {
         synchronized (UtilDatabase.LOCK) {
             SQLiteDatabase db = UtilDatabase.openWritableDatabase(context);
 
-            for(NewsEntry entry : entries) {
+            for(Article entry : entries) {
                 int currentID = TableIDsTable.increaseTableID(db, Util.FEED_TABLE);
 
-                String sql = "INSERT INTO feed (id, title, link, pubDate, desc) VALUES (" +
+                String sql = "INSERT INTO feed (id, source, title, link, date, desc) VALUES (" +
                         currentID + ", '"
+                        + entry.source.replace("'", Util.DB_APOSTROPHE_FIX) + "', '"
                         + entry.title.replace("'", Util.DB_APOSTROPHE_FIX) + "', '"
-                        + entry.link + "', '"
-                        + entry.pubDate + "', '"
+                        + entry.link.replace("'", Util.DB_APOSTROPHE_FIX) + "', "
+                        + entry.date + ", '"
                         + entry.desc.replace("'", Util.DB_APOSTROPHE_FIX) + "');";
                 db.execSQL(sql);
             }
@@ -31,21 +32,21 @@ public class FeedTable {
         }
     }
 
-    public static ArrayList<NewsEntry> getAll(Context context) {
+    public static ArrayList<Article> getAll(Context context) {
         SQLiteDatabase db = UtilDatabase.openReadableDatabase(context);
-        ArrayList<NewsEntry> feedEntries = new ArrayList<>();
+        ArrayList<Article> feedEntries = new ArrayList<>();
 
         String sql = "SELECT * FROM feed";
         Cursor c = db.rawQuery(sql, null);
 
         if(c.moveToFirst()) {
             for(int i = 0; i < c.getCount(); i++) {
-                NewsEntry entry = new NewsEntry(
-                        c.getString(1).replace(Util.DB_APOSTROPHE_FIX, "'"),
-                        c.getString(4),
-                        c.getString(2),
-                        c.getString(3).replace(Util.DB_APOSTROPHE_FIX, "'"),
-                        null);
+                Article entry = new Article();
+                entry.source = c.getString(1).replace(Util.DB_APOSTROPHE_FIX, "'");;
+                entry.title = c.getString(2).replace(Util.DB_APOSTROPHE_FIX, "'");
+                entry.link = c.getString(3).replace(Util.DB_APOSTROPHE_FIX, "'");;
+                entry.date = c.getLong(4);
+                entry.desc = c.getString(5).replace(Util.DB_APOSTROPHE_FIX, "'");;
                 feedEntries.add(entry);
                 c.moveToNext();
             }

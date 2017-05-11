@@ -9,10 +9,10 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import com.acando.newshunter.content.NewsEntry;
+import com.acando.newshunter.content.Article;
 import com.acando.newshunter.R;
 import com.acando.newshunter.content.ViewImageTask;
-import com.acando.newshunter.content.XmlDownloadTask;
+import com.acando.newshunter.content.LoadArticlesTask;
 import com.acando.newshunter.database.UtilDatabase;
 
 import java.util.ArrayList;
@@ -31,18 +31,18 @@ public class ListActivity extends Activity {
 
         UtilDatabase.checkDatabase(this);
 
-        XmlDownloadTask task = new XmlDownloadTask(this);
+        LoadArticlesTask task = new LoadArticlesTask(this);
         task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, "https://www.theguardian.com/world/rss");
     }
 
-    public void loadList(ArrayList<NewsEntry> items) {
+    public void loadList(ArrayList<Article> items) {
         ListView listView = (ListView) findViewById(R.id.list);
         final ListAdapter adapter = new ListAdapter(this, items);
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                NewsEntry entry = adapter.getItem(position);
+                Article entry = adapter.getItem(position);
                 if(entry != null) {
                     Intent intent = new Intent(ListActivity.this, DetailActivity.class);
                     intent.putExtra("url", entry.link);

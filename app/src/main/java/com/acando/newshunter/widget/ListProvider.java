@@ -1,6 +1,9 @@
 package com.acando.newshunter.widget;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 import android.appwidget.AppWidgetManager;
 import android.content.Context;
@@ -8,12 +11,14 @@ import android.content.Intent;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService.RemoteViewsFactory;
 
-import com.acando.newshunter.content.NewsEntry;
+import com.acando.newshunter.content.Article;
 import com.acando.newshunter.R;
+import com.acando.newshunter.content.Source;
 import com.acando.newshunter.database.table.FeedTable;
+import com.acando.newshunter.database.table.SourceTable;
 
 public final class ListProvider implements RemoteViewsFactory {
-    private ArrayList<NewsEntry> listItemList = new ArrayList<>();
+    private ArrayList<Article> listItemList = new ArrayList<>();
     private Context context = null;
     private int appWidgetId;
 
@@ -41,14 +46,22 @@ public final class ListProvider implements RemoteViewsFactory {
     public RemoteViews getViewAt(int position) {
         RemoteViews remoteView = new RemoteViews(context.getPackageName(), R.layout.widget_list_item);
 
-        NewsEntry listItem = listItemList.get(position);
+        Article listItem = listItemList.get(position);
         remoteView.setTextViewText(R.id.title, listItem.title);
         remoteView.setTextViewText(R.id.desc, listItem.desc);
-        remoteView.setTextViewText(R.id.pubDate, listItem.pubDate);
+
+        Calendar cal = new GregorianCalendar();
+        SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.YYYY HH:mm");
+        cal.setTimeInMillis(listItem.date);
+        remoteView.setTextViewText(R.id.date, sdf.format(cal.getTime()));
+
+        Source source = SourceTable.get(context, listItem.source);
+        remoteView.setTextViewText(R.id.source, source.name);
 
         //ListView click event part 2
         Intent fillInIntent = new Intent();
         fillInIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
+        fillInIntent.putExtra("source_internal_name", listItem.source);
         fillInIntent.putExtra(WidgetProvider.EXTRA_LIST_VIEW_ITEM_URL, listItem.link);
         remoteView.setOnClickFillInIntent(R.id.widget_item_layout, fillInIntent);
 

@@ -18,15 +18,17 @@ public class DatabaseCreator {
     private static void createTables(SQLiteDatabase db) {
         String sql = "CREATE TABLE feed "
                 + "(id                      INT       PRIMARY KEY    NOT NULL,"
+                + " source                  TEXT                     NOT NULL,"
                 + " title                   TEXT                     NOT NULL,"
                 + " link                    TEXT                     NOT NULL,"
-                + " pubDate                 TEXT                     NOT NULL,"
+                + " date                    INTEGER                  NOT NULL,"
                 + " desc                    TEXT                     NOT NULL)";
         db.execSQL(sql);
 
         sql = "CREATE TABLE source "
-                + "(id                      INT       PRIMARY KEY    NOT NULL,"
-                + " name                    TEXT                     NOT NULL)";
+                + "(internal_name           TEXT       PRIMARY KEY   NOT NULL,"
+                + " name                    TEXT                     NOT NULL,"
+                + " url                     TEXT                     NOT NULL)";
         db.execSQL(sql);
 
         sql = "CREATE TABLE table_ids "

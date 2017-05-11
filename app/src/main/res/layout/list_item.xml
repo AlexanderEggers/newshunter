@@ -4,7 +4,7 @@
     <data>
         <variable
             name="entry"
-            type="com.acando.newshunter.content.NewsEntry" />
+            type="com.acando.newshunter.content.Article" />
     </data>
 
     <LinearLayout
@@ -18,10 +18,12 @@
             android:orientation="horizontal">
 
             <ImageView
+                android:layout_marginTop="10dp"
                 android:layout_marginStart="10dp"
+                android:layout_marginEnd="0dp"
                 android:id="@+id/image"
                 android:layout_width="130dp"
-                android:layout_height="wrap_content" />
+                android:layout_height="100dp" />
 
             <LinearLayout
                 android:layout_marginTop="10dp"
@@ -59,11 +61,10 @@
             android:layout_height="wrap_content">
 
             <TextView
-                android:id="@+id/pubDate"
+                android:id="@+id/date"
                 android:layout_margin="10dp"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@{entry.pubDate}" />
+                android:layout_height="wrap_content" />
 
         </RelativeLayout>
 

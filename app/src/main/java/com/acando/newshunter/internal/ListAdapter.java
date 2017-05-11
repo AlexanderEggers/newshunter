@@ -8,23 +8,24 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.acando.newshunter.Global;
-import com.acando.newshunter.content.NewsEntry;
+import com.acando.newshunter.content.Article;
 import com.acando.newshunter.R;
 import com.acando.newshunter.databinding.ListItemBinding;
 
 import java.util.List;
 
-public class ListAdapter extends ArrayAdapter<NewsEntry> {
+public class ListAdapter extends ArrayAdapter<Article> {
 
-    public ListAdapter(Context context, List<NewsEntry> objects) {
+    public ListAdapter(Context context, List<Article> objects) {
         super(context, 0, objects);
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        NewsEntry item = getItem(position);
+        Article item = getItem(position);
 
         if(convertView == null) {
             ListItemBinding binding = DataBindingUtil.inflate(LayoutInflater.from(getContext()), R.layout.list_item, null, false);
@@ -41,6 +42,8 @@ public class ListAdapter extends ArrayAdapter<NewsEntry> {
         } else {
             ((ImageView) convertView.findViewById(R.id.image)).setImageBitmap(bitmap);
         }
+
+        ((TextView) convertView.findViewById(R.id.date)).setText(item.date + "");
 
         return convertView;
     }

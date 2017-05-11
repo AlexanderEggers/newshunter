@@ -7,25 +7,11 @@
     android:fitsSystemWindows="true"
     tools:context=".internal.ListActivity">
 
-    <RelativeLayout
+    <WebView
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:id="@+id/webview"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <WebView
-            android:nestedScrollingEnabled="true"
-            android:visibility="invisible"
-            android:id="@+id/webview"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-        <ProgressBar
-            android:id="@+id/pd"
-            android:layout_centerInParent="true"
-            android:layout_width="50dp"
-            android:layout_height="50dp" />
-
-    </RelativeLayout>
+        android:layout_height="match_parent" />
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"

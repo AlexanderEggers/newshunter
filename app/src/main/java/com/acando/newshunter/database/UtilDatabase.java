@@ -4,6 +4,8 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.acando.newshunter.Util;
+import com.acando.newshunter.content.Source;
+import com.acando.newshunter.database.table.SourceTable;
 import com.acando.newshunter.database.table.TableIDsTable;
 import com.acando.newshunter.database.tool.DatabaseCreator;
 
@@ -42,6 +44,7 @@ public class UtilDatabase {
 
     private static void initDatabase(Context context) {
         TableIDsTable.insertTableID(context, Util.FEED_TABLE);
-        TableIDsTable.insertTableID(context, Util.SOURCE_TABLE);
+        SourceTable.insert(context, new Source("spiegel-online", "Spiegel Online", "http://www.spiegel.de"));
+        SourceTable.insert(context, new Source("the-guardian-uk", "The Guardian (UK)", "https://www.theguardian.com/uk"));
     }
 }

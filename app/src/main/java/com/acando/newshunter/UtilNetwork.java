@@ -5,33 +5,68 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.util.Log;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
 import java.net.URL;
 
 import javax.net.ssl.HttpsURLConnection;
 
 public class UtilNetwork {
 
-    public static InputStream downloadUrl(String urlString) throws IOException {
-        URL url = new URL(urlString);
-        HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
-        conn.setReadTimeout(10000);
-        conn.setConnectTimeout(15000);
-        conn.setRequestMethod("GET");
-        conn.setDoInput(true);
-        conn.connect();
-        return conn.getInputStream();
+    public static String websiteToString(String url) throws IOException, OutOfMemoryError {
+        HttpsURLConnection connection = null;
+        InputStream input = null;
+        String respond = null;
+
+        Log.i(Util.class.getName(), "DATA URL: " + url);
+
+        try {
+            connection = (HttpsURLConnection) (new URL(url).openConnection());
+            connection.setRequestMethod("GET");
+            connection.setDoInput(true);
+
+            connection.setConnectTimeout(4000);
+            connection.setReadTimeout(4000);
+            connection.connect();
+
+            int responseCode = connection.getResponseCode();
+            if (responseCode != HttpsURLConnection.HTTP_OK) {
+                throw new IOException("HTTP error code: " + responseCode);
+            }
+
+            StringBuilder stringBuilder = new StringBuilder();
+            input = connection.getInputStream();
+            if (input != null) {
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(input));
+
+                String line;
+                while ((line = bufferedReader.readLine()) != null) {
+                    stringBuilder.append(line);
+                }
+
+                input.close();
+                connection.disconnect();
+                respond = stringBuilder.toString();
+            }
+        } finally {
+            if (input != null) input.close();
+            if (connection != null) connection.disconnect();
+        }
+        return respond;
     }
 
     public static Bitmap getImage(String url) throws IOException, OutOfMemoryError {
         InputStream input = null;
-        HttpsURLConnection connection = null;
+        HttpURLConnection connection = null;
         Bitmap bitmap = null;
 
         try {
-            connection = (HttpsURLConnection) (new URL(url).openConnection());
+            connection = (HttpURLConnection) (new URL(url).openConnection());
             connection.setRequestMethod("GET");
             connection.setDoInput(true);
 
